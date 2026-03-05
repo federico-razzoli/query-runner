@@ -613,6 +613,49 @@ def _cmd_lst(args):
     sys.exit(EXIT_NORMAL)
 
 
+def _cmd_cat(args):
+    """cat <TEST | GROUP>"""
+    if not args:
+        print(f'{SCRIPT_NAME}: cat: expected a test or group', file=sys.stderr)
+        sys.exit(EXIT_ARGS)
+
+    if len(args) > 1:
+        print(f'{SCRIPT_NAME}: cat: unexpected argument: {args[1]}', file=sys.stderr)
+        sys.exit(EXIT_ARGS)
+
+    target = args[0]
+    path   = _resolve_path(target)
+
+    if path is None:
+        print(f'{SCRIPT_NAME}: not found: {target}', file=sys.stderr)
+        sys.exit(EXIT_ARGS)
+
+    if os.path.isfile(path):
+        # Single test: print content without a header
+        with open(path, encoding='utf-8') as fh:
+            print(fh.read(), end='')
+    else:
+        # Group: print each test with a header
+        test_files = _collect_tests(path)
+        first = True
+        for test_path in test_files:
+            rel     = os.path.relpath(test_path, TESTS_DIR)
+            test_id = rel.replace(os.sep, '.')
+            upper   = test_id.upper()
+
+            if not first:
+                print()
+            first = False
+
+            print(upper)
+            print('=' * len(upper))
+
+            with open(test_path, encoding='utf-8') as fh:
+                print(fh.read(), end='')
+
+    sys.exit(EXIT_NORMAL)
+
+
 def _cmd_run(args):
     """run [GROUP | TEST]"""
     target = args[0] if args else None
@@ -659,6 +702,7 @@ Commands:
   lsg [-r] [GROUP]   List groups (first level by default; -r for recursive)
   lst [GROUP]        Show groups and their tests
   run [GROUP|TEST]   Run all tests, or tests in a group, or a single test
+  cat <TEST|GROUP>   Print the source of a test, or of all tests in a group
 
 Options:
   --help             Show this help message and exit
@@ -702,6 +746,8 @@ def main():
         _cmd_lsg(cmd_args)
     elif cmd == 'lst':
         _cmd_lst(cmd_args)
+    elif cmd == 'cat':
+        _cmd_cat(cmd_args)
     elif cmd == 'run':
         _cmd_run(cmd_args)
     else:

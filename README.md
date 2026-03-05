@@ -53,6 +53,7 @@ python run.py COMMAND [OPTIONS]
 | `lsg` | `lsg [-r] [GROUP]` | List groups. Shows top-level groups by default; use `-r` for a recursive listing. An optional `GROUP` argument narrows the scope. |
 | `lst` | `lst [GROUP]` | List groups and the tests they contain. An optional `GROUP` argument narrows the scope. |
 | `run` | `run [GROUP\|TEST]` | Run tests. Without arguments all tests are run. Pass a group name to run that group, or a test name to run a single test. |
+| `cat` | `cat <TEST\|GROUP>` | Print the source of a single test (without a header), or the source of every test in a group (recursively), each preceded by a header. |
 
 ### Flags
 
@@ -84,6 +85,14 @@ python run.py run basic
 
 # Run a single test
 python run.py run basic.simple_queries
+```
+
+```bash
+# Print the source of a single test
+python run.py cat basic.simple_queries
+
+# Print the source of all tests in a group
+python run.py cat basic
 ```
 
 ### Output format
