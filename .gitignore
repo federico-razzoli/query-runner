@@ -1,0 +1,13 @@
+# Ignore environment file containing database credentials
+.env
+
+# Python byte-compiled / optimised / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/

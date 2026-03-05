@@ -1,0 +1,19 @@
+#! Connection 1
+
+START TRANSACTION;
+
+SELECT 'connection 1 started a transaction';
+
+#! Connection 2
+
+START TRANSACTION;
+
+SELECT 'connection 2 started a transaction';
+
+#! Connection 1
+
+ROLLBACK;
+
+#! Connection 2
+
+ROLLBACK;
